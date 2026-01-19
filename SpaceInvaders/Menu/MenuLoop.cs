@@ -1,17 +1,20 @@
-﻿using System.Text;
+﻿using SpaceInvaders.Game;
+using SpaceInvaders.System;
+using System.Text;
 using System.Threading.Channels;
 
-namespace SpaceInvaders;
+namespace SpaceInvaders.Menu;
 
-class GameLoop
+class MenuLoop
 {
+
     private readonly ChannelReader<InputCommand> _input;
     private readonly ChannelWriter<FrameSnapshot> _render;
     private readonly CancellationToken _token;
 
     private readonly GameState _state = new();
 
-    public GameLoop(
+    public MenuLoop(
         ChannelReader<InputCommand> input,
         ChannelWriter<FrameSnapshot> render,
         CancellationToken token)
@@ -19,13 +22,6 @@ class GameLoop
         _input = input;
         _render = render;
         _token = token;
-
-        _state.Invaders.AddRange(new[]
-        {
-            new Invader(3, 2),
-            new Invader(7, 2),
-            new Invader(11, 2)
-        });
     }
 
     public async Task RunAsync()
@@ -56,16 +52,16 @@ class GameLoop
         {
             switch (input.Type)
             {
-                case InputCommandType.LEFT:
+                case SystemInputCommandType.LEFT:
                     _state.Player = _state.Player with { X = Math.Max(0, _state.Player.X - 1) }; // Ensure player doesn't move out of bounds то the left, left limit 0
                     break;
-                case InputCommandType.RIGHT:
+                case SystemInputCommandType.RIGHT:
                     _state.Player = _state.Player with { X = Math.Min(20, _state.Player.X + 1) }; // Ensure player doesn't move out of bounds to the right, not more than 20
                     break;
-                case InputCommandType.SHOOT:
+                case SystemInputCommandType.SPACE:
                     _state.Bullets.Add(new Bullet(_state.Player.X, 10)); // Bullet starts just above the player at Y=10
                     break;
-                case InputCommandType.PAUSE: //TODO: Implement  Menu/Pause functionality
+                case SystemInputCommandType.ESCAPE: //TODO: Implement  Menu/Pause functionality
                     throw new OperationCanceledException();
             }
         }

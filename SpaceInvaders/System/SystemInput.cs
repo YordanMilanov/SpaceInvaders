@@ -1,8 +1,9 @@
-﻿using System.Threading.Channels;
+﻿using SpaceInvaders.System;
+using System.Threading.Channels;
 
-namespace SpaceInvaders
+namespace SpaceInvaders.Common
 {
-    static class InputSystem
+    static class SystemInput
     {
         /// <summary>
         /// Starts the input system thread that listens for key presses and sends commands to the provided channel writer.
@@ -17,10 +18,12 @@ namespace SpaceInvaders
 
                     InputCommand? command = key switch
                     {
-                        ConsoleKey.LeftArrow => new InputCommand(InputCommandType.LEFT),
-                        ConsoleKey.RightArrow => new InputCommand(InputCommandType.RIGHT),
-                        ConsoleKey.Spacebar => new InputCommand(InputCommandType.SHOOT),
-                        ConsoleKey.Escape => new InputCommand(InputCommandType.PAUSE),
+                        ConsoleKey.UpArrow => new InputCommand(SystemInputCommandType.UP),
+                        ConsoleKey.DownArrow => new InputCommand(SystemInputCommandType.DOWN),
+                        ConsoleKey.LeftArrow => new InputCommand(SystemInputCommandType.LEFT),
+                        ConsoleKey.RightArrow => new InputCommand(SystemInputCommandType.RIGHT),
+                        ConsoleKey.Spacebar => new InputCommand(SystemInputCommandType.SPACE),
+                        ConsoleKey.Escape => new InputCommand(SystemInputCommandType.ESCAPE),
                         _ => null
                     };
 

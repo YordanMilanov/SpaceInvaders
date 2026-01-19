@@ -1,24 +1,30 @@
 ﻿using System.Threading.Channels;
-using SpaceInvaders;
+using SpaceInvaders.Common;
+using SpaceInvaders.System;
 
 var inputChannel = Channel.CreateUnbounded<InputCommand>();
-var renderChannel = Channel.CreateBounded<FrameSnapshot>(2);
+
+var renderChannel = Channel.CreateBounded<FrameSnapshot>(
+    new BoundedChannelOptions(2)
+    {
+        FullMode = BoundedChannelFullMode.DropOldest // If the channel is full, drop the oldest frame (framerate drop)
+    });
 
 using var cts = new CancellationTokenSource();
 
-InputSystem.ThreadStart(inputChannel.Writer, cts.Token);
+SystemInput.ThreadStart(inputChannel.Writer, cts.Token);
 
-var gameLoop = new GameLoop(
+var systemLoop = new SystemLoop(
     inputChannel.Reader,
     renderChannel.Writer,
     cts.Token);
 
-var gameLoopTask = Task.Run(() => gameLoop.RunAsync());
-var rendererTask = Task.Run(() => Renderer.RunAsync(renderChannel.Reader));
+var systemLoopTask = Task.Run(() => systemLoop.RunAsync());
+var rendererTask = Task.Run(() => SystemRenderer.RunAsync(renderChannel.Reader));
 
 try
 {
-    await gameLoopTask;
+    await systemLoopTask;
 }
 catch (OperationCanceledException)
 {

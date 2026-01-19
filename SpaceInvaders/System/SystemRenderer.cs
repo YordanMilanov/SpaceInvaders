@@ -1,8 +1,8 @@
 ﻿using System.Threading.Channels;
 
-namespace SpaceInvaders;
+namespace SpaceInvaders.System;
 
-static class Renderer
+static class SystemRenderer
 {
     public static async Task RunAsync(ChannelReader<FrameSnapshot> reader)
     {

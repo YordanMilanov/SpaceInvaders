@@ -2,7 +2,7 @@
 
 namespace SpaceInvaders.Game
 {
-    public static class GameFrameGenerator
+    public static class GameplayFrameGenerator
     {
         /// <summary>
         /// Renders the current game state as a string representing the game frame.

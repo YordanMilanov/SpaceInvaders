@@ -1,5 +1,5 @@
 ﻿using SpaceInvaders.Common;
-using SpaceInvaders.Menu.MenuStatic;
+using SpaceInvaders.Menu.Common;
 using System.Text;
 
 namespace SpaceInvaders.Menu
@@ -10,17 +10,18 @@ namespace SpaceInvaders.Menu
         /// Renders the current game state as a string representing the game frame.
         /// </summary>
         /// <returns>A string containing the visual representation of the current game frame, with each line corresponding to a row in the game area.(coordination system)</returns>
-        public static string GenerateFrame(MenuState menuState)
+        public static string GenerateFrame(MenuState menuState, ScreenState screenState)
         {
-            string[] rows = menuState.state switch
+            string[] rows = screenState switch
             {
-                SystemState.MainMenu => MenuOptions.MainMenu(),
-                SystemState.PauseMenu => MenuOptions.PauseMenu(),
-                SystemState.GameOverMenu => MenuOptions.GameOverMenu(),
+                ScreenState.MainMenu => MenuOptionsProvider.MainMenu(),
+                ScreenState.PauseMenu => MenuOptionsProvider.PauseMenu(),
+                ScreenState.GameOverMenu => MenuOptionsProvider.GameOverMenu(),
+                ScreenState.SettingsMenu => MenuOptionsProvider.SettingsMenu(),
                 _ => Array.Empty<string>(),
             };
 
-            rows = SelectMenuOption(rows, menuState.CurrentOption.position);
+            rows = SelectMenuOption(rows, menuState.CurrentOption);
 
             return string.Join(Environment.NewLine, rows);
         }

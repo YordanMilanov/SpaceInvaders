@@ -1,41 +1,55 @@
-﻿namespace SpaceInvaders.Menu.MenuStatic
+﻿using SpaceInvaders.Extensions;
+using SpaceInvaders.Menu.Enums;
+
+namespace SpaceInvaders.Menu.Common
 {
-    public class MenuOptions
+    public class MenuOptionsProvider
     {
 
         private static readonly string[] MainMenuOptions = new[]
         {
-            "=== Space Invaders ===",
-            "Start Game",
-            "Game Records",
-            "Settings",
-            "Credits",
-            "Exit"
+            MenuHeader.MainMenu.GetDisplayName(),
+            MainMenuOption.StartGame.GetDisplayName(),
+            MainMenuOption.GameRecords.GetDisplayName(),
+            MainMenuOption.Settings.GetDisplayName(),
+            MainMenuOption.Credits.GetDisplayName(),
+            MainMenuOption.Exit.GetDisplayName(),
         };
 
         private static readonly string[] PauseMenuOptions = new[]
         {
-            "=== Game Paused ===",
-            "Resume",
-            "Restart",
-            "Exit"
+            MenuHeader.PauseMenu.GetDisplayName(),
+            PauseMenuOption.Resume.GetDisplayName(),
+            PauseMenuOption.Restart.GetDisplayName(),
+            PauseMenuOption.Exit.GetDisplayName(),
         };
 
         private static readonly string[] GameOverOptions = new[]
         {
-            "=== Game Paused ===",
-            "Resume",
-            "Restart",
-            "Exit"
+            MenuHeader.GameOver.GetDisplayName(),
+            GameOverMenuOption.Restart.GetDisplayName(),
+            GameOverMenuOption.Exit.GetDisplayName(),
+        };
+
+        private static readonly string[] SettingsMenuOptions = new[]
+        {
+            MenuHeader.Settings.GetDisplayName(),
+            SettingsMenuOption.Difficulty.GetDisplayName(),
         };
 
         public static string[] MainMenu() => AlignCenterMenu(MainMenuOptions);
         public static string[] PauseMenu() => AlignCenterMenu(PauseMenuOptions);
         public static string[] GameOverMenu() => AlignCenterMenu(GameOverOptions);
+        public static string[] SettingsMenu() => AlignCenterMenu(SettingsMenuOptions);
 
-        public static int MainMenuLength => (int)LongestOptionLength(MainMenuOptions);
-        public static int PauseMenuLength => (int)LongestOptionLength(PauseMenuOptions);
-        public static int GameOverMenuLength => (int)LongestOptionLength(GameOverOptions);
+        public static int MainMenuOptionsCount => MainMenuOptions.Length;
+        public static int PauseMenuOptionsCount => PauseMenuOptions.Length;
+        public static int GameOverMenuOptionsCount => GameOverOptions.Length;
+        public static int SettingsMenuOptionsCount => SettingsMenuOptions.Length;
+
+        public static int MainMenuLongestOptionLength => (int)LongestOptionLength(MainMenuOptions);
+        public static int PauseMenuLongestOptionLength => (int)LongestOptionLength(PauseMenuOptions);
+        public static int GameOverMenuLongestOptionLength => (int)LongestOptionLength(GameOverOptions);
 
 
         /// <summary>

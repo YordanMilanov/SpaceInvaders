@@ -5,6 +5,7 @@
         public Player Player { get; set; } = new(10);
         public List<Bullet> Bullets { get; } = new();
         public List<Invader> Invaders { get; } = new();
+        public bool IsPaused = false;
     }
 
     public record Player(int X);

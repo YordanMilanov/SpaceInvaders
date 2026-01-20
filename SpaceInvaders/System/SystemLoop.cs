@@ -1,7 +1,7 @@
 ﻿using SpaceInvaders.Game;
 using SpaceInvaders.Menu;
+using SpaceInvaders.Menu.Common;
 using SpaceInvaders.System;
-using System.Text;
 using System.Threading.Channels;
 
 namespace SpaceInvaders.Common;
@@ -9,22 +9,25 @@ namespace SpaceInvaders.Common;
 class SystemLoop
 {
 
-    private readonly ChannelReader<InputCommand> _input;
-    private readonly ChannelWriter<FrameSnapshot> _render;
+    private readonly ChannelReader<InputCommand> _inputChannel;
+    private readonly ChannelWriter<FrameSnapshot> _renderChannel;
+    private readonly ScreenManager _screenManager;
     private readonly CancellationToken _token;
 
     private GameState _gameState = new();
     private MenuState _menuState = new();
 
-    private readonly SystemState _systemState = new();
+    private ScreenState _screenState = new();
 
     public SystemLoop(
         ChannelReader<InputCommand> input,
         ChannelWriter<FrameSnapshot> render,
+        ScreenManager screenManager,
         CancellationToken token)
     {
-        _input = input;
-        _render = render;
+        _inputChannel = input;
+        _renderChannel = render;
+        _screenManager = screenManager;
         _token = token;
 
         _gameState.Invaders.AddRange(new[]
@@ -41,50 +44,84 @@ class SystemLoop
 
         while (!_token.IsCancellationRequested)
         {
-            // 1️. Process All pending input (if any)
-            while (_input.TryRead(out var input))
+            // Handle input
+            while (_inputChannel.TryRead(out var input))
             {
-                switch (_systemState)
-                {
-                    case SystemState.Gameplay:
-                        _gameState = GameInputProcessor.ProcessGameplayInput(input, _gameState);
-                        break;
-
-                    case SystemState.MainMenu:
-                        _menuState = MenuInputProcessor.ProcessMainMenuInput(input, _menuState);
-                        break;
-
-                    case SystemState.PauseMenu:
-                        _menuState = MenuInputProcessor.ProcessPauseMenuInput(input, _menuState);
-                        break;
-
-                    case SystemState.GameOverMenu:
-                        _menuState = MenuInputProcessor.ProcessGameOverMenuInput(input, _menuState);
-                        break;
-                }
+                _screenManager.HandleInput(input);
             }
 
-            // 2️. Update simulation (even with NO input)
-            string frame = _systemState switch
-            {
-                SystemState.Gameplay => GenerateGameplayFrame(),
-                SystemState.MainMenu => MenuFrameGenerator.GenerateFrame(_menuState),
-                SystemState.PauseMenu => MenuFrameGenerator.GenerateFrame(_menuState),
-                SystemState.GameOverMenu => MenuFrameGenerator.GenerateFrame(_menuState),
-                _ => string.Empty
-            };
+            // Update current screen: For Dynamic animations
+            _screenManager.Update();
 
-            // 3️. Render every frame
-            await _render.WriteAsync(new FrameSnapshot(frame), _token);
+            // Render current screen
+            var frame = _screenManager.Render();
+            await _renderChannel.WriteAsync(new FrameSnapshot(frame), _token);
 
-            // 4️. Fixed timestep
+            // Wait for next frame
             await Task.Delay(frameTime, _token);
         }
+
+        //while (!_token.IsCancellationRequested)
+        //{
+        //    // 1️. Process All pending input (if any)
+        //    while (_inputChannel.TryRead(out var input))
+        //    {
+        //        switch (_screenState)
+        //        {
+        //            case ScreenState.Gameplay:
+        //                _gameState = GameplayInputProcessor.ProcessGameplayInput(input, _gameState);
+        //                break;
+
+        //            case ScreenState.MainMenu:
+        //                _menuState = MenuInputProcessor.ProcessMainMenuInput(input, _menuState);
+        //                _screenState = _menuState.ScreenState;
+        //                break;
+
+        //            case ScreenState.PauseMenu:
+        //                _menuState = MenuInputProcessor.ProcessPauseMenuInput(input, _menuState);
+        //                _screenState = _menuState.ScreenState;
+        //                break;
+
+        //            case ScreenState.GameOverMenu:
+        //                _menuState = MenuInputProcessor.ProcessGameOverMenuInput(input, _menuState);
+        //                _screenState = _menuState.ScreenState;
+        //                break;
+        //        }
+        //    }
+
+        //    // 2️. Update frame (even with NO input)
+        //    string frame = _screenState switch
+        //    {
+        //        ScreenState.Gameplay => GenerateGameplayFrame(),
+        //        ScreenState.MainMenu => MenuFrameGenerator.GenerateFrame(_menuState),
+        //        ScreenState.PauseMenu => MenuFrameGenerator.GenerateFrame(_menuState),
+        //        ScreenState.GameOverMenu => MenuFrameGenerator.GenerateFrame(_menuState),
+        //        ScreenState.SettingsMenu => MenuFrameGenerator.GenerateFrame(_menuState),
+        //        _ => string.Empty
+        //    };
+
+        //    // 3️. Render every frame
+        //    await _renderChannel.WriteAsync(new FrameSnapshot(frame), _token);
+
+        //    // 4️. Fixed timestep
+        //    await Task.Delay(frameTime, _token);
+        //}
     }
 
-    private string GenerateGameplayFrame()
-    {
-        _gameState = GameStateUpdater.UpdateBullets(_gameState);
-        return GameFrameGenerator.GenerateFrame(_gameState);
-    }
+    //private string GenerateGameplayFrame()
+    //{
+    //    if(!_gameState.IsPaused)
+    //    {
+    //        _gameState = GameplayStateUpdater.UpdateBullets(_gameState);
+    //        return GameplayFrameGenerator.GenerateFrame(_gameState);
+    //    } 
+    //    else
+    //    {
+    //        _menuState = new MenuState() { 
+    //            ScreenState = ScreenState.PauseMenu
+    //        };
+    //        _screenState = ScreenState.PauseMenu;
+    //        return MenuFrameGenerator.GenerateFrame(_menuState);
+    //    }
+    //}
 }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SpaceInvaders.Game
 {
-    public static class GameInputProcessor
+    public static class GameplayInputProcessor
     {
         /// <summary>
         /// Processes all pending input commands and updates the game state accordingly.
@@ -25,11 +25,21 @@ namespace SpaceInvaders.Game
                 case SystemInputCommandType.SPACE:
                     state.Bullets.Add(new Bullet(state.Player.X, 10)); // Bullet starts just above the player at Y=10
                     break;
-                case SystemInputCommandType.ESCAPE: //TODO: Implement  Menu/Pause functionality
-                    throw new OperationCanceledException();
+                case SystemInputCommandType.ESCAPE:
+                    state = ProcessGameplayEscapeClick(state);
+                    break;
             }
             return state;
         }
 
+        /// <summary>
+        /// Processes all pending input commands and updates the main menu state accordingly.
+        /// </summary>
+        /// <remarks>This method handles main menu navigation</remarks>
+        private static GameState ProcessGameplayEscapeClick(GameState state)
+        {
+            state.IsPaused = !state.IsPaused;
+            return state;
+        }
     }
 }

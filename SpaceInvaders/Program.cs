@@ -14,9 +14,12 @@ using var cts = new CancellationTokenSource();
 
 SystemInput.ThreadStart(inputChannel.Writer, cts.Token);
 
+var screenManager = ScreenManagerFactory.Create();
+
 var systemLoop = new SystemLoop(
     inputChannel.Reader,
     renderChannel.Writer,
+    screenManager,
     cts.Token);
 
 var systemLoopTask = Task.Run(() => systemLoop.RunAsync());

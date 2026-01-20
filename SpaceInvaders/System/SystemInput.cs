@@ -23,6 +23,7 @@ namespace SpaceInvaders.Common
                         ConsoleKey.LeftArrow => new InputCommand(SystemInputCommandType.LEFT),
                         ConsoleKey.RightArrow => new InputCommand(SystemInputCommandType.RIGHT),
                         ConsoleKey.Spacebar => new InputCommand(SystemInputCommandType.SPACE),
+                        ConsoleKey.Enter => new InputCommand(SystemInputCommandType.ENTER),
                         ConsoleKey.Escape => new InputCommand(SystemInputCommandType.ESCAPE),
                         _ => null
                     };

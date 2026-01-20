@@ -1,6 +1,6 @@
 ﻿namespace SpaceInvaders.Game
 {
-    public static class GameStateUpdater
+    public static class GameplayStateUpdater
     {
         public static GameState UpdateBullets(GameState gamestate)
         {

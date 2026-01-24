@@ -1,23 +1,22 @@
 ﻿using SpaceInvaders.Common;
+using SpaceInvaders.contracts;
 using SpaceInvaders.Menu.Common;
-using System.Text;
 
 namespace SpaceInvaders.Menu
 {
-    public static class MenuFrameGenerator
+    public class MenuFrameGenerator : IFrameGenerator<MenuState>
     {
         /// <summary>
         /// Renders the current game state as a string representing the game frame.
         /// </summary>
         /// <returns>A string containing the visual representation of the current game frame, with each line corresponding to a row in the game area.(coordination system)</returns>
-        public static string GenerateFrame(MenuState menuState, ScreenState screenState)
+        public string GenerateFrame(MenuState menuState)
         {
-            string[] rows = screenState switch
+            string[] rows = menuState.ScreenState switch
             {
-                ScreenState.MainMenu => MenuOptionsProvider.MainMenu(),
-                ScreenState.PauseMenu => MenuOptionsProvider.PauseMenu(),
-                ScreenState.GameOverMenu => MenuOptionsProvider.GameOverMenu(),
-                ScreenState.SettingsMenu => MenuOptionsProvider.SettingsMenu(),
+                ScreenType.MainMenu => MenuOptionsProvider.MainMenu(),
+                ScreenType.PauseMenu => MenuOptionsProvider.PauseMenu(),
+                ScreenType.GameOverMenu => MenuOptionsProvider.GameOverMenu(),
                 _ => Array.Empty<string>(),
             };
 

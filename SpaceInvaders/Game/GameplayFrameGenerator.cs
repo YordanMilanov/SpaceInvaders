@@ -1,14 +1,15 @@
-﻿using System.Text;
+﻿using SpaceInvaders.contracts;
+using System.Text;
 
 namespace SpaceInvaders.Game
 {
-    public static class GameplayFrameGenerator
+    public class GameplayFrameGenerator : IFrameGenerator<GameState>
     {
         /// <summary>
         /// Renders the current game state as a string representing the game frame.
         /// </summary>
         /// <returns>A string containing the visual representation of the current game frame, with each line corresponding to a row in the game area.(coordination system)</returns>
-        public static string GenerateFrame(GameState gameState)
+        public string GenerateFrame(GameState gameState)
         {
             var screenFrame = new char[12, 22];
 

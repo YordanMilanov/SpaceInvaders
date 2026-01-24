@@ -10,17 +10,17 @@ namespace SpaceInvaders.System
     {
         public static ScreenManager Create()
         {
-            var screens = new Dictionary<ScreenState, IScreen>
+            var screens = new Dictionary<ScreenType, IScreen>
             {
-                [ScreenState.MainMenu] = new MenuScreen(
+                [ScreenType.MainMenu] = new MenuScreen(
                     new MenuState(),
                     new MainMenuBehavior()),
 
-                [ScreenState.Gameplay] =
+                [ScreenType.Gameplay] =
                     new GameplayScreen(new GameState())
             };
 
-            return new ScreenManager(screens, ScreenState.MainMenu);
+            return new ScreenManager(screens, ScreenType.MainMenu);
         }
     }
 }

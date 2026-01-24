@@ -1,12 +1,10 @@
 ﻿namespace SpaceInvaders.Common;
 
-public enum ScreenState
+public enum ScreenType
 {
     MainMenu,
     Gameplay,
     PauseMenu,
     GameOverMenu,
-    SettingsMenu,
-    GameRecords,
     Credits,
 }

@@ -17,7 +17,7 @@ class SystemLoop
     private GameState _gameState = new();
     private MenuState _menuState = new();
 
-    private ScreenState _screenState = new();
+    private ScreenType _screenState = new();
 
     public SystemLoop(
         ChannelReader<InputCommand> input,

@@ -7,8 +7,9 @@ namespace SpaceInvaders.contracts
     {
         void HandleInput(InputCommand input);
         void Update();
-        string Render(ScreenState currentScreen);
+        string Render();
 
-        public event Action<ScreenState>? ScreenChanged;
+        public event Action<ScreenType>? OnScreenStateChanged;
+
     }
 }

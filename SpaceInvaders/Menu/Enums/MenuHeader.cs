@@ -13,8 +13,5 @@ namespace SpaceInvaders.Menu.Enums
 
         [Display(Name = "=== Game Over ===")]
         GameOver,
-
-        [Display(Name = "=== Settings ===")]
-        Settings,
     }
 }

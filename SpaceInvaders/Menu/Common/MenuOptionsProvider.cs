@@ -10,8 +10,6 @@ namespace SpaceInvaders.Menu.Common
         {
             MenuHeader.MainMenu.GetDisplayName(),
             MainMenuOption.StartGame.GetDisplayName(),
-            MainMenuOption.GameRecords.GetDisplayName(),
-            MainMenuOption.Settings.GetDisplayName(),
             MainMenuOption.Credits.GetDisplayName(),
             MainMenuOption.Exit.GetDisplayName(),
         };
@@ -31,26 +29,13 @@ namespace SpaceInvaders.Menu.Common
             GameOverMenuOption.Exit.GetDisplayName(),
         };
 
-        private static readonly string[] SettingsMenuOptions = new[]
-        {
-            MenuHeader.Settings.GetDisplayName(),
-            SettingsMenuOption.Difficulty.GetDisplayName(),
-        };
-
         public static string[] MainMenu() => AlignCenterMenu(MainMenuOptions);
         public static string[] PauseMenu() => AlignCenterMenu(PauseMenuOptions);
         public static string[] GameOverMenu() => AlignCenterMenu(GameOverOptions);
-        public static string[] SettingsMenu() => AlignCenterMenu(SettingsMenuOptions);
 
         public static int MainMenuOptionsCount => MainMenuOptions.Length;
         public static int PauseMenuOptionsCount => PauseMenuOptions.Length;
         public static int GameOverMenuOptionsCount => GameOverOptions.Length;
-        public static int SettingsMenuOptionsCount => SettingsMenuOptions.Length;
-
-        public static int MainMenuLongestOptionLength => (int)LongestOptionLength(MainMenuOptions);
-        public static int PauseMenuLongestOptionLength => (int)LongestOptionLength(PauseMenuOptions);
-        public static int GameOverMenuLongestOptionLength => (int)LongestOptionLength(GameOverOptions);
-
 
         /// <summary>
         /// Aligns the menu options to the center based on the longest option length.

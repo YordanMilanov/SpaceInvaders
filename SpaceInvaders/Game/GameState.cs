@@ -1,6 +1,8 @@
-﻿namespace SpaceInvaders.Game
+﻿using SpaceInvaders.contracts;
+
+namespace SpaceInvaders.Game
 {
-    public class GameState
+    public class GameState : IScreenState
     {
         public Player Player { get; set; } = new(10);
         public List<Bullet> Bullets { get; } = new();

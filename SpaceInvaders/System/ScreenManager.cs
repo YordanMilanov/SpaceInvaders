@@ -1,49 +1,46 @@
 ﻿using SpaceInvaders.Common;
 using SpaceInvaders.contracts;
-using SpaceInvaders.Menu.Common;
 
 namespace SpaceInvaders.System
 {
     class ScreenManager
     {
-        private readonly Dictionary<ScreenState, IScreen> _screens;
-        private IScreen _currentScreen;
-        private ScreenState _currentScreenState;
+        private readonly IScreenFactory _factory;
+        private readonly Stack<IScreen> _screens = new();
 
-        public ScreenManager(Dictionary<ScreenState, IScreen> screens, ScreenState start)
+        public ScreenManager(IScreenFactory factory, ScreenType initialState)
         {
-            _screens = screens;
-            _currentScreen = screens[start];
-
-            // Subscribe to MenuScreen events
-            if (_currentScreen is MenuScreen menuScreen)
-                menuScreen.ScreenChanged += OnScreenChanged;
+            _factory = factory;
+            AddScreen(initialState);
         }
 
-        private void OnScreenChanged(ScreenState newScreen)
-        {
-            // Reset the old screen if it’s a MenuScreen
-            if (_currentScreen is IMenuScreen oldScreen)
-                oldScreen.ResetState();
-
-            // Switch to the new screen
-            if (_screens.TryGetValue(newScreen, out var screen))
-            {
-                _currentScreen = screen;
-                if (_currentScreen is IScreen menuScreen)
-                    menuScreen.ScreenChanged += OnScreenChanged;
-            }
-
-            _currentScreenState = newScreen;
+        /// <summary>
+        /// Stack-Push based. Adds a new screen on top of the stack.
+        /// </summary>
+        private IScreen AddScreen(ScreenType state) {
+            var screen = _factory.Create(state);
+            screen.OnScreenStateChanged += OnScreenStateChanged;
+            _screens.Push(screen);
+            return screen;
         }
 
-        public void HandleInput(InputCommand input)
+        /// <summary>
+        /// Stack-Pop based. Removes the last used screen.
+        /// </summary>
+        private void RemoveScreen()
         {
-            _currentScreen.HandleInput(input);
+            if (_screens.Count <= 1) return; // Prevent popping the last screen
+
+            var old = _screens.Pop();
+            old.OnScreenStateChanged -= OnScreenStateChanged;
         }
 
-        public void Update() => _currentScreen.Update();
+        private void OnScreenStateChanged(ScreenType newScreenType) => AddScreen(newScreenType);
 
-        public string Render() => _currentScreen.Render(_currentScreenState);
+        public void HandleInput(InputCommand input) => _screens.Peek().HandleInput(input);
+
+        public void Update() => _screens.Peek().Update();
+
+        public string Render() => _screens.Peek().Render();
     }
 }

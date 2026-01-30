@@ -16,7 +16,7 @@ namespace SpaceInvaders.Menu
             {
                 ScreenType.MainMenu => MenuOptionsProvider.MainMenu(),
                 ScreenType.PauseMenu => MenuOptionsProvider.PauseMenu(),
-                ScreenType.GameOverMenu => MenuOptionsProvider.GameOverMenu(),
+                ScreenType.GameOver => MenuOptionsProvider.GameOverMenu(),
                 _ => Array.Empty<string>(),
             };
 

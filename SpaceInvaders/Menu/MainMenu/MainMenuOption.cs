@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SpaceInvaders.Menu.Enums
+namespace SpaceInvaders.Menu.MainMenu
 {
     public enum MainMenuOption
     {
@@ -8,9 +8,9 @@ namespace SpaceInvaders.Menu.Enums
         StartGame = 1,
 
         [Display(Name = "Credits")]
-        Credits = 4,
+        Credits = 2,
 
         [Display(Name = "Exit")]
-        Exit = 5
+        Exit = 3
     }
 }

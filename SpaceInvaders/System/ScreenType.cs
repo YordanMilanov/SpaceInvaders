@@ -5,6 +5,6 @@ public enum ScreenType
     MainMenu,
     Gameplay,
     PauseMenu,
-    GameOverMenu,
+    GameOver,
     Credits,
 }

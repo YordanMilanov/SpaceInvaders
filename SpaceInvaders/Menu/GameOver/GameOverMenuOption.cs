@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SpaceInvaders.Menu.Enums
+namespace SpaceInvaders.Menu.GameOver
 {
     public enum GameOverMenuOption
     {

@@ -3,15 +3,16 @@ using SpaceInvaders.System;
 
 namespace SpaceInvaders.contracts
 {
-    public abstract class ScreenBase : IScreen
+    public abstract class ScreenBase<TScreenState> : IScreen
+        where TScreenState : IScreenState
     {
-        private IScreenState _screenState;
-        private readonly IScreenBehavior<IScreenState> _screenBehavior;
-        private readonly IFrameGenerator<IScreenState> _frameGenerator;
+        private TScreenState _screenState;
+        private readonly IScreenBehavior<TScreenState> _screenBehavior;
+        private readonly IFrameGenerator<TScreenState> _frameGenerator;
 
         public event Action<ScreenType>? OnScreenStateChanged;
 
-        public ScreenBase(IScreenState screenState, IScreenBehavior<IScreenState> behavior, IFrameGenerator<IScreenState> frameGenerator)
+        public ScreenBase(TScreenState screenState, IScreenBehavior<TScreenState> behavior, IFrameGenerator<TScreenState> frameGenerator)
         {
             _screenState = screenState;
             _screenBehavior = behavior;
@@ -20,17 +21,26 @@ namespace SpaceInvaders.contracts
 
         public void HandleInput(InputCommand input)
         {
-            var result = _screenBehavior.Handle(input, _screenState);
+            var result = _screenBehavior.HandleInput(input, _screenState);
             _screenState = result.State;
 
             if (result.NavigateTo.HasValue)
+            {
+                Console.Clear();
                 OnScreenStateChanged?.Invoke(result.NavigateTo.Value);
+            }
         }
 
-        public virtual void Update()
-        {
-            // blinking arrows, animations
-        }
+        public virtual void Update() {
+            var result = _screenBehavior.Update( _screenState);
+            _screenState = result.State;
+
+            if (result.NavigateTo.HasValue)
+            {
+                Console.Clear();
+                OnScreenStateChanged?.Invoke(result.NavigateTo.Value);
+            }
+        } 
 
         public virtual string Render() => _frameGenerator.GenerateFrame(_screenState);
     }

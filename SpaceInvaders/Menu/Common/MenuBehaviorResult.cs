@@ -3,5 +3,5 @@ using SpaceInvaders.contracts;
 
 namespace SpaceInvaders.Menu.Common
 {
-    public record MenuBehaviorResult(MenuState State, ScreenType? NavigateTo) : IScreenBehaviorResult<MenuState>;
+    public record MenuBehaviorResult(MenuState State, ScreenType? NavigateTo = null) : IScreenBehaviorResult<MenuState>;
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SpaceInvaders.Menu.Enums
+namespace SpaceInvaders.Menu.PauseMenu
 {
     public enum  PauseMenuOption
     {

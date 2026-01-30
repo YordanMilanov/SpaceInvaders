@@ -1,13 +1,12 @@
 ﻿using SpaceInvaders.contracts;
-using SpaceInvaders.Menu.MainMenu;
 
 namespace SpaceInvaders.Game
 {
-    class GameplayScreen : ScreenBase
+    class GameplayScreen : ScreenBase<GameState>
     {
         public GameplayScreen(
             GameState gameState,
-            MainMenuBehavior behavior,
+            GameplayBehavior behavior,
             GameplayFrameGenerator frameGenerator)
             : base(gameState, behavior, frameGenerator)
         {

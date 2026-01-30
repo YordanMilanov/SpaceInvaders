@@ -1,5 +1,8 @@
 ﻿using SpaceInvaders.Extensions;
 using SpaceInvaders.Menu.Enums;
+using SpaceInvaders.Menu.GameOver;
+using SpaceInvaders.Menu.MainMenu;
+using SpaceInvaders.Menu.PauseMenu;
 
 namespace SpaceInvaders.Menu.Common
 {

@@ -3,5 +3,5 @@ using SpaceInvaders.contracts;
 
 namespace SpaceInvaders.Game
 {
-    public record GameBehaviorResult(GameState State, ScreenType? NavigateTo) : IScreenBehaviorResult<GameState>;
+    public record GameplayBehaviorResult(GameState State, ScreenType? NavigateTo = null) : IScreenBehaviorResult<GameState>;
 }

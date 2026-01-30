@@ -14,7 +14,7 @@ using var cts = new CancellationTokenSource();
 
 SystemInput.ThreadStart(inputChannel.Writer, cts.Token);
 
-var screenManager = ScreenManagerFactory.Create();
+var screenManager = new ScreenManager(initialState: ScreenType.MainMenu);
 
 var systemLoop = new SystemLoop(
     inputChannel.Reader,

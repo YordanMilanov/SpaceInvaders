@@ -1,8 +1,7 @@
 ﻿using SpaceInvaders.Common;
 using SpaceInvaders.contracts;
-using SpaceInvaders.Menu.Common;
 
-namespace SpaceInvaders.Menu
+namespace SpaceInvaders.Menu.Common
 {
     public class MenuFrameGenerator : IFrameGenerator<MenuState>
     {
@@ -17,6 +16,7 @@ namespace SpaceInvaders.Menu
                 ScreenType.MainMenu => MenuOptionsProvider.MainMenu(),
                 ScreenType.PauseMenu => MenuOptionsProvider.PauseMenu(),
                 ScreenType.GameOver => MenuOptionsProvider.GameOverMenu(),
+                ScreenType.Credits => MenuOptionsProvider.CreditsMenu(),
                 _ => Array.Empty<string>(),
             };
 

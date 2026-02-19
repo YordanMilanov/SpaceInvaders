@@ -1,7 +1,6 @@
 ﻿using SpaceInvaders.Common;
 using SpaceInvaders.contracts;
 using SpaceInvaders.Menu.Common;
-using SpaceInvaders.Menu.MainMenu;
 using SpaceInvaders.System;
 
 namespace SpaceInvaders.Menu.GameOver
@@ -19,7 +18,7 @@ namespace SpaceInvaders.Menu.GameOver
             };
         }
 
-        public IScreenBehaviorResult<MenuState> Update(MenuState state) => new MenuBehaviorResult(state); //TO DO: Implement if needed
+        public IScreenBehaviorResult<MenuState> Update(MenuState state) => new MenuBehaviorResult(state);
 
         private static MenuBehaviorResult HandleEnter(MenuState state) =>
             (GameOverMenuOption)state.CurrentOption switch

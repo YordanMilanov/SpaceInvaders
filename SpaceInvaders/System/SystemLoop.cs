@@ -1,7 +1,4 @@
 ﻿using SpaceInvaders.Config;
-using SpaceInvaders.Game;
-using SpaceInvaders.Menu;
-using SpaceInvaders.Menu.Common;
 using SpaceInvaders.System;
 using System.Threading.Channels;
 

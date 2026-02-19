@@ -1,6 +1,5 @@
 ﻿using SpaceInvaders.Common;
 using SpaceInvaders.contracts;
-using SpaceInvaders.Game;
 using SpaceInvaders.Menu.PauseMenu;
 
 namespace SpaceInvaders.System
@@ -22,6 +21,12 @@ namespace SpaceInvaders.System
         private IScreen AddScreen(ScreenType screenType) {
             var screen = _screenFactory.Create(screenType);
             screen.OnScreenStateChanged += OnScreenStateChanged;
+
+            if (screen is PauseMenuScreen pauseMenuScreen) { 
+                pauseMenuScreen.OnRestartRequested += OnRestartRequested;
+                screen = pauseMenuScreen;
+            }
+
             _screens.Push(screen);
             return screen;
         }
@@ -36,6 +41,11 @@ namespace SpaceInvaders.System
             if(old is not null)
             {
                 old.OnScreenStateChanged -= OnScreenStateChanged;
+
+                if (old is PauseMenuScreen pauseMenuScreen)
+                {
+                    pauseMenuScreen.OnRestartRequested -= OnRestartRequested;
+                }
             }
         }
 
@@ -43,7 +53,6 @@ namespace SpaceInvaders.System
 
         private void OnScreenStateChanged(ScreenType newScreenType) {
 
-            // Special case: If we are resuming gameplay from pause menu, just remove the pause menu
             if (newScreenType == ScreenType.Gameplay)
             {
                 if(_screens.Peek() is PauseMenuScreen)
@@ -61,7 +70,13 @@ namespace SpaceInvaders.System
             {
                 AddScreen(newScreenType);
             }
-        } 
+        }
+
+        private void OnRestartRequested()
+        {
+            ResetScreens();
+            AddScreen(ScreenType.Gameplay);
+        }
 
         public void HandleInput(InputCommand input) => _screens.Peek().HandleInput(input);
 

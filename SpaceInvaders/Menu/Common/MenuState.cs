@@ -7,6 +7,5 @@ namespace SpaceInvaders.Menu.Common
     {
         public required int CurrentOption { get; init; } = 1;
         public required ScreenType ScreenState { get; init; }
-        //public bool HighlightOn { get; init; } = true; // for blinking cursor
     }
 }

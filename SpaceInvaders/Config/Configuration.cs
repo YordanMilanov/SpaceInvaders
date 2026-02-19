@@ -9,11 +9,12 @@
         public static char PlayerSymbol = 'A';
         public static char BulletSymbol = '|';
 
-
         public const int ScreenFrames = 60;
         public const int RefreshRate = 1000 / ScreenFrames;
 
         public const int InvaderSideMoveFrameInterval = 10;
         public const int InvaderDownMoveFrameInterval = 200;
+
+        public const string Developer = "Yordan Milanov";
     }
 }

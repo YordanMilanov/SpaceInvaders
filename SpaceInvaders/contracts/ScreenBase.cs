@@ -6,11 +6,11 @@ namespace SpaceInvaders.contracts
     public abstract class ScreenBase<TScreenState> : IScreen
         where TScreenState : IScreenState
     {
-        private TScreenState _screenState;
-        private readonly IScreenBehavior<TScreenState> _screenBehavior;
-        private readonly IFrameGenerator<TScreenState> _frameGenerator;
+        protected TScreenState _screenState;
+        protected readonly IScreenBehavior<TScreenState> _screenBehavior;
+        protected readonly IFrameGenerator<TScreenState> _frameGenerator;
 
-        public event Action<ScreenType>? OnScreenStateChanged;
+        public virtual event Action<ScreenType>? OnScreenStateChanged;
 
         public ScreenBase(TScreenState screenState, IScreenBehavior<TScreenState> behavior, IFrameGenerator<TScreenState> frameGenerator)
         {
@@ -19,7 +19,7 @@ namespace SpaceInvaders.contracts
             _frameGenerator = frameGenerator;
         }
 
-        public void HandleInput(InputCommand input)
+        public virtual void HandleInput(InputCommand input)
         {
             var result = _screenBehavior.HandleInput(input, _screenState);
             _screenState = result.State;
@@ -27,7 +27,7 @@ namespace SpaceInvaders.contracts
             if (result.NavigateTo.HasValue)
             {
                 Console.Clear();
-                OnScreenStateChanged?.Invoke(result.NavigateTo.Value);
+                RaiseScreenStateChanged(result.NavigateTo.Value);
             }
         }
 
@@ -38,11 +38,16 @@ namespace SpaceInvaders.contracts
             if (result.NavigateTo.HasValue)
             {
                 Console.Clear();
-                OnScreenStateChanged?.Invoke(result.NavigateTo.Value);
+                RaiseScreenStateChanged(result.NavigateTo.Value);
             }
         } 
 
         public virtual string Render() => _frameGenerator.GenerateFrame(_screenState);
+
+        protected virtual void RaiseScreenStateChanged(ScreenType type)
+        {
+            OnScreenStateChanged?.Invoke(type);
+        }
     }
 
 }

@@ -1,4 +1,6 @@
-﻿using SpaceInvaders.Extensions;
+﻿using SpaceInvaders.Config;
+using SpaceInvaders.Extensions;
+using SpaceInvaders.Menu.CreditsMenu;
 using SpaceInvaders.Menu.Enums;
 using SpaceInvaders.Menu.GameOver;
 using SpaceInvaders.Menu.MainMenu;
@@ -32,9 +34,17 @@ namespace SpaceInvaders.Menu.Common
             GameOverMenuOption.Exit.GetDisplayName(),
         };
 
+        private static readonly string[] CreditsOptions = new[]
+        {
+            MenuHeader.Credits.GetDisplayName(),
+            $"Dev: {Configuration.Developer}",
+            CreditsMenuOption.Exit.GetDisplayName()
+        };
+
         public static string[] MainMenu() => AlignCenterMenu(MainMenuOptions);
         public static string[] PauseMenu() => AlignCenterMenu(PauseMenuOptions);
         public static string[] GameOverMenu() => AlignCenterMenu(GameOverOptions);
+        public static string[] CreditsMenu() => AlignCenterMenu(CreditsOptions);
 
         public static int MainMenuOptionsCount => MainMenuOptions.Length;
         public static int PauseMenuOptionsCount => PauseMenuOptions.Length;

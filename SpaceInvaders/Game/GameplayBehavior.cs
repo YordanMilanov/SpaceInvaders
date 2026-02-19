@@ -24,20 +24,17 @@ namespace SpaceInvaders.Game
 
         public IScreenBehaviorResult<GameState> Update(GameState state)
         {
-            state = UpdateInvaderMoveIntervals(state);
+            state = UpdateInvaderMoveIntervalCounters(state);
 
-            var moveInvadersResult = MoveInvaders(state);
-           
-            if(moveInvadersResult.NavigateTo is not null)
+            state = MoveBullets(state);
+            state = MoveInvaders(state);
+            state = UpdateInvaders(state);
+
+            if (state.IsGameOver)
             {
-                return new GameplayBehaviorResult(moveInvadersResult.State);
+                return new GameplayBehaviorResult(state, Common.ScreenType.GameOver);
             } 
-            else
-            {
-                state = moveInvadersResult.State;
-            }
 
-                state = UpdateBullets(state);
             return new GameplayBehaviorResult(state);
         }
 
@@ -74,16 +71,16 @@ namespace SpaceInvaders.Game
         #endregion
 
         #region UpdateHelpers
-        private static GameState UpdateInvaderMoveIntervals(GameState state) => 
+        private static GameState UpdateInvaderMoveIntervalCounters(GameState state) => 
             state with
             {
-                InvaderSideMoveFrameInterval = Math.Max(0, state.InvaderSideMoveFrameInterval - 1),
-                InvaderDownMoveFrameInterval = Math.Max(0, state.InvaderDownMoveFrameInterval - 1),
+                InvaderSideMoveFrameIntervalCounter = Math.Max(0, state.InvaderSideMoveFrameIntervalCounter - 1),
+                InvaderDownMoveFrameIntervalCounter = Math.Max(0, state.InvaderDownMoveFrameIntervalCounter - 1),
             };
 
-        private static GameplayBehaviorResult MoveInvaders(GameState state)
+        private static GameState MoveInvaders(GameState state)
         {
-            if (state.InvaderSideMoveFrameInterval == 0)
+            if (state.InvaderSideMoveFrameIntervalCounter == 0)
             {
                 state = state with
                 {
@@ -98,11 +95,11 @@ namespace SpaceInvaders.Game
                         })
                         .ToImmutableList(),
 
-                    InvaderSideMoveFrameInterval = Configuration.InvaderSideMoveFrameInterval,
+                    InvaderSideMoveFrameIntervalCounter = state.CurrentSideMoveFrameInterval,
                 };
             }
 
-            if (state.InvaderDownMoveFrameInterval == 0)
+            if (state.InvaderDownMoveFrameIntervalCounter == 0)
             {
                 var invaders = state.Invaders.ToBuilder();
 
@@ -112,9 +109,9 @@ namespace SpaceInvaders.Game
 
                     var newY = invader.Y + 1;
 
-                    if (newY > Configuration.PlayerStartPosition)
+                    if (newY > Configuration.PlayerStartPosition - 1)
                     {
-                        return new GameplayBehaviorResult(state, Common.ScreenType.GameOver);
+                        return state with { IsGameOver = true };
                     }
 
                     invaders[i] = invader with { Y = newY };
@@ -123,13 +120,13 @@ namespace SpaceInvaders.Game
                 state = state with
                 {
                     Invaders = invaders.ToImmutable(),
-                    InvaderDownMoveFrameInterval = Configuration.InvaderDownMoveFrameInterval
+                    InvaderDownMoveFrameIntervalCounter = state.CurrentDownMoveFrameInterval
                 };
             }
-            return new GameplayBehaviorResult(state);
+            return state;
         }
 
-        private static GameState UpdateBullets(GameState state)
+        private static GameState MoveBullets(GameState state)
         {
             var bullets = state.Bullets.ToBuilder();
 
@@ -142,6 +139,47 @@ namespace SpaceInvaders.Game
             state = state with { Bullets = bullets.ToImmutable() };
 
             return state;
+        }
+
+        private static GameState UpdateInvaders(GameState state)
+        {
+            var remainingBullets = state.Bullets.ToBuilder();
+            var remainingInvaders = ImmutableList.CreateBuilder<Invader>();
+            var score = state.Score;
+
+            foreach (var invader in state.Invaders)
+            {
+                var hitBulletIndex = remainingBullets
+                    .FindIndex(b => b.X == invader.X && b.Y == invader.Y);
+
+                if (hitBulletIndex != -1)
+                {
+                    score++;
+                    remainingBullets.RemoveAt(hitBulletIndex);
+                }
+                else
+                {
+                    remainingInvaders.Add(invader);
+                }
+            }
+
+            if(remainingInvaders.Count is 0)
+            {
+                return state with
+                {
+                    Score = score,
+                    Invaders = GameplayHelper.InitInvaders(),
+                    CurrentDownMoveFrameInterval = state.CurrentDownMoveFrameInterval / 2,
+                    InvaderDownMoveFrameIntervalCounter = state.CurrentDownMoveFrameInterval / 2,
+                };
+            }
+
+            return state with
+            {
+                Score = score,
+                Bullets = remainingBullets.ToImmutable(),
+                Invaders = remainingInvaders.ToImmutable()
+            };
         }
         #endregion
     }

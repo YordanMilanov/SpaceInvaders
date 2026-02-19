@@ -13,5 +13,8 @@ namespace SpaceInvaders.Menu.Enums
 
         [Display(Name = "=== Game Over ===")]
         GameOver,
+
+        [Display(Name = "=== Credits ===")]
+        Credits,
     }
 }

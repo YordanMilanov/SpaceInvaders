@@ -1,5 +1,4 @@
-﻿using SpaceInvaders.Menu.Common;
-using SpaceInvaders.System;
+﻿using SpaceInvaders.System;
 
 namespace SpaceInvaders.contracts
 {

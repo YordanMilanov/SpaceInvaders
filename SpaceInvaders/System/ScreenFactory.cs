@@ -1,8 +1,8 @@
 ﻿using SpaceInvaders.Common;
 using SpaceInvaders.contracts;
 using SpaceInvaders.Game;
-using SpaceInvaders.Menu;
 using SpaceInvaders.Menu.Common;
+using SpaceInvaders.Menu.CreditsMenu;
 using SpaceInvaders.Menu.GameOver;
 using SpaceInvaders.Menu.MainMenu;
 using SpaceInvaders.Menu.PauseMenu;
@@ -15,6 +15,7 @@ namespace SpaceInvaders.System
             => state switch
             {
                 ScreenType.MainMenu => InitMainMenuScreen(),
+                ScreenType.Credits => InitCreditsMenuScreen(),
                 ScreenType.Gameplay => InitGameplayScreen(),
                 ScreenType.GameOver => InitGameOverScreen(),
                 ScreenType.PauseMenu => InitPauseMenuScreen(),
@@ -41,5 +42,10 @@ namespace SpaceInvaders.System
             new MenuState() { CurrentOption = 1, ScreenState = ScreenType.PauseMenu },
             new PauseMenuBehavior(),
             new MenuFrameGenerator());
+
+        private CreditsMenuScreen InitCreditsMenuScreen() => new CreditsMenuScreen(
+    new MenuState() { CurrentOption = 2, ScreenState = ScreenType.Credits },
+    new CreditsMenuBehavior(),
+    new MenuFrameGenerator());
     }
 }

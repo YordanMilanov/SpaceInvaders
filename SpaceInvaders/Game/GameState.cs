@@ -12,10 +12,16 @@ namespace SpaceInvaders.Game
 
         public ImmutableList<Invader> Invaders { get; init; } = GameplayHelper.InitInvaders();
 
+        public int Score { get; init; } = 0;
+
         public bool IsPaused { get; init; } = false;
 
-        public int InvaderSideMoveFrameInterval { get; init; } = Configuration.InvaderSideMoveFrameInterval;
-        public int InvaderDownMoveFrameInterval { get; init; } = Configuration.InvaderDownMoveFrameInterval;
+        public bool IsGameOver { get; init; } = false;
+
+        public int InvaderSideMoveFrameIntervalCounter { get; init; } = Configuration.InvaderSideMoveFrameInterval;
+        public int InvaderDownMoveFrameIntervalCounter { get; init; } = Configuration.InvaderDownMoveFrameInterval;
+        public int CurrentSideMoveFrameInterval { get; init; } = Configuration.InvaderSideMoveFrameInterval;
+        public int CurrentDownMoveFrameInterval { get; init; } = Configuration.InvaderDownMoveFrameInterval;
     }
 
     public record Player(int X);
